@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: default-backend
+  namespace: ingress-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: default-backend
+  template:
+    metadata:
+      labels:
+        app: default-backend
+    spec:
+      containers:
+      - name: default-backend
+        image: gcr.io/google_containers/defaultbackend:1.0
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 10m
+            memory: 20Mi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: default-backend
+  namespace: ingress-namespace
+spec:
+  ports: 
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: default-backend
+      
